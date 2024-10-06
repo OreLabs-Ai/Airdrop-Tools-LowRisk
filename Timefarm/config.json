@@ -2,6 +2,6 @@
   "api_id": "7814860",
   "api_hash": "6f2db86a92df674456f5876ebabf0438",
   "auto_upgrade": true,
-  "auto_task": task,
+  "auto_task": false,
   "interval": 5
 }

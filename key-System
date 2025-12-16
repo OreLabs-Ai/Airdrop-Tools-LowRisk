@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    
+    <meta http-equiv="refresh" content="0;url=https://ads.luarmor.net/get_key?for=Solixhub_Free_KeySystem-OWlLHDMCHADk">
+
+    <script>
+        // Cara 2: Javascript Redirect (Utama & Paling Cepat)
+        window.location.replace("https://ads.luarmor.net/get_key?for=Solixhub_Free_KeySystem-OWlLHDMCHADk");
+    </script>
+    
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: monospace;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <p>Please wait...</p>
+</body>
+</html>

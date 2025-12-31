@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Installment Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #050b14;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-cyan: #00f2ff;
+            --neon-purple: #bc13fe;
+            --text-main: #ffffff;
+            --text-secondary: #a0aab5;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 242, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(188, 19, 254, 0.1) 0%, transparent 40%);
+            padding-bottom: 120px;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #fff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .subtitle { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px; }
+        
+        .swipe-hint {
+            font-size: 0.75rem; color: var(--neon-cyan);
+            animation: pulse 2s infinite; display: flex;
+            align-items: center; justify-content: center; gap: 8px;
+        }
+
+        /* SLIDER CONTAINER */
+        .slider-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 20px;
+            padding: 20px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; 
+        }
+        .slider-container::-webkit-scrollbar { display: none; }
+
+        /* CARDS */
+        .series-slide {
+            flex: 0 0 85vw;
+            max-width: 400px;
+            scroll-snap-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .series-slide::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            opacity: 0.8; border-radius: 20px 20px 0 0;
+        }
+
+        .series-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 15px; text-align: center; color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+        }
+
+        /* SERIES IMAGE */
+        .series-img {
+            width: 100%;
+            max-width: 180px; /* Ukuran gambar disesuaikan agar proporsional */
+            height: auto;
+            display: block;
+            margin: 0 auto 25px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .series-slide:hover .series-img {
+            transform: scale(1.08) translateY(-10px);
+        }
+
+        /* ITEMS */
+        .product-item {
+            margin-bottom: 20px; padding-bottom: 15px;
+            border-bottom: 1px dashed var(--glass-border);
+        }
+        .product-item:last-child { border-bottom: none; margin-bottom: 0; }
+
+        .model-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; color: #fff; }
+        
+        .dp-badge {
+            display: inline-block;
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--neon-cyan);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        /* PRICE GRID */
+        .price-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .price-box {
+            background: rgba(0,0,0,0.3);
+            padding: 10px 12px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .price-label {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 2px;
+            margin-bottom: 2px;
+        }
+        .price-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .beacukai-box {
+            background: rgba(188, 19, 254, 0.1);
+            border: 1px solid rgba(188, 19, 254, 0.2);
+        }
+
+        /* FLOATING BUTTON */
+        .wa-float {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(45deg, #128C7E, #25D366);
+            color: white; padding: 14px 25px; border-radius: 50px;
+            text-decoration: none; font-weight: 600; font-size: 0.95rem;
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+            display: flex; align-items: center; gap: 8px; z-index: 100;
+            width: 85%; max-width: 320px; justify-content: center;
+        }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* Desktop Adjustment */
+        @media (min-width: 768px) {
+            .slider-container { justify-content: center; flex-wrap: wrap; overflow: visible; }
+            .series-slide { flex: 0 0 360px; margin-bottom: 30px; }
+            .swipe-hint { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>PREMIUM SERIES</h1>
+        <div class="subtitle">Official Price List & Installment</div>
+        <div class="swipe-hint">
+            <span>&larr;</span> GESER UNTUK LIHAT FOTO LAIN <span>&rarr;</span>
+        </div>
+    </header>
+
+    <div class="slider-container">
+
+        <div class="series-slide">
+            <div class="series-title">iPhone 11 Series</div>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/IPhone_11_Pro_Midnight_Green.svg" class="series-img" alt="iPhone 11 Pro">
+            
+            <div class="product-item">
+                <div class="model-name">iPhone 11 64GB</div>
+                <div class="dp-badge">DP: Rp1.620.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>762.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>520.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>854.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>583.000</span></div>
+                    </div>
+                    <div class="price-box beacukai-box">
+                        <span class="price-label">Resmi Bea Cukai</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.594.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.086.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 11 128GB</div>
+                <div class="dp-badge">DP: Rp1.700.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>914.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>623.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.006.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>686.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 11 Pro 64GB</div>
+                <div class="dp-badge">DP: Rp1.900.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.052.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>717.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.144.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>780.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 11 Pro 256GB</div>
+                <div class="dp-badge">DP: Rp2.060.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.162.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>792.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.254.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>855.000</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="series-slide">
+            <div class="series-title">iPhone 12 Series</div>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/IPhone_12_Pro_Gold.svg" class="series-img" alt="iPhone 12 Pro">
+
+            <div class="product-item">
+                <div class="model-name">iPhone 12 64GB</div>
+                <div class="dp-badge">DP: Rp1.780.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>969.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>661.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.061.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>723.000</span></div>
+                    </div>
+                    <div class="price-box beacukai-box">
+                        <span class="price-label">Resmi Bea Cukai</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.797.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.223.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 12 128GB</div>
+                <div class="dp-badge">DP: Rp1.900.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.052.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>717.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.144.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>780.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 12 Pro 128GB</div>
+                <div class="dp-badge">DP: Rp2.240.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.286.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>876.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.378.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>939.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 12 Pro Max 128GB</div>
+                <div class="dp-badge">DP: Rp2.540.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.493.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.017.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.585.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.080.000</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="series-slide">
+            <div class="series-title">iPhone 13 Series</div>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/IPhone_13_Pro_vector.svg" class="series-img" alt="iPhone 13 Pro">
+
+            <div class="product-item">
+                <div class="model-name">iPhone 13 128GB</div>
+                <div class="dp-badge">DP: Rp2.300.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.328.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>905.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.420.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>967.000</span></div>
+                    </div>
+                    <div class="price-box beacukai-box">
+                        <span class="price-label">Resmi Bea Cukai</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>2.202.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.498.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 13 Pro 128GB</div>
+                <div class="dp-badge">DP: Rp2.780.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.659.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.130.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.751.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.192.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 13 Pro Max 128GB</div>
+                <div class="dp-badge">DP: Rp3.180.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.935.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.317.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>2.027.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.380.000</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="series-slide">
+            <div class="series-title">iPhone 14 Series</div>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/IPhone_14_Pro_vector.svg" class="series-img" alt="iPhone 14 Series">
+
+            <div class="product-item">
+                <div class="model-name">iPhone 14 128GB</div>
+                <div class="dp-badge">DP: Rp2.660.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.576.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.073.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>1.668.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.136.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 14 Pro 128GB</div>
+                <div class="dp-badge">DP: Rp3.500.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>2.156.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.467.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>2.248.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.530.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 14 Pro Max 128GB</div>
+                <div class="dp-badge">DP: Rp3.940.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>2.459.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.673.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>2.551.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>1.736.000</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="series-slide">
+            <div class="series-title">iPhone 15 Series</div>
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/IPhone_15_Vector.svg" class="series-img" alt="iPhone 15 Series">
+
+            <div class="product-item">
+                <div class="model-name">iPhone 15 Pro 128GB</div>
+                <div class="dp-badge">DP: Rp5.180.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>3.315.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>2.255.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>3.407.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>2.317.000</span></div>
+                    </div>
+                    <div class="price-box beacukai-box">
+                        <span class="price-label">Resmi Bea Cukai</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>4.787.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>3.255.000</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-item">
+                <div class="model-name">iPhone 15 Pro Max 256GB</div>
+                <div class="dp-badge">DP: Rp5.900.000</div>
+                <div class="price-grid">
+                    <div class="price-box">
+                        <span class="price-label">WiFi Only</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>3.812.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>2.592.000</span></div>
+                    </div>
+                    <div class="price-box">
+                        <span class="price-label">All Operator</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>3.904.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>2.655.000</span></div>
+                    </div>
+                    <div class="price-box beacukai-box">
+                        <span class="price-label">Resmi Bea Cukai</span>
+                        <div class="price-row"><span>Cicilan 6x</span> <span>5.698.000</span></div>
+                        <div class="price-row"><span>Cicilan 9x</span> <span>3.873.000</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="https://wa.me/6283139824761?text=Halo,%20saya%20tertarik%20dengan%20cicilan%20iPhone" class="wa-float">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        Hubungi via WhatsApp
+    </a>
+
+</body>
+</html>
